@@ -1,38 +1,38 @@
 const express = require("express");
-const Categorie = require("../models/categorie");
+const White = require("../models/white");
 const cors = require("./cors");
 
-const categorieRouter = express.Router();
+const whiteRouter = express.Router();
 
-categorieRouter
+whiteRouter
     .route("/")
     .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
     .get(cors.cors, (req, res, next) => {
-        Categorie.find()
-            .then((categories) => {
+        White.find()
+            .then((white) => {
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
-                res.json(categories);
+                res.json(white);
             })
             .catch((err) => next(err));
     })
     .post(cors.corsWithOptions, (req, res, next) => {
-        Categorie.create(req.body)
-            .then((categorie) => {
-                console.log("Categorie Created ", categorie);
+        White.create(req.body)
+            .then((white) => {
+                console.log("Red Created ", white);
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
-                res.json(categorie);
+                res.json(white);
             })
             .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, (req, res) => {
         res.statusCode = 403;
-        res.end("PUT operation not supported on /shop");
+        res.end("PUT operation not supported on /shop/Whites");
     })
     .delete(cors.corsWithOptions, (req, res) => {
         res.statusCode = 403;
-        res.end("DELETE operation not supported on /shop");
+        res.end("DELETE operation not supported on /shop/Whites");
     });
 
-module.exports = categorieRouter;
+module.exports = whiteRouter;

@@ -1,38 +1,43 @@
 const express = require("express");
-const Categorie = require("../models/categorie");
+const Cart = require("../models/cart");
 const cors = require("./cors");
 
-const categorieRouter = express.Router();
+const cartRouter = express.Router();
 
-categorieRouter
+cartRouter
     .route("/")
     .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
     .get(cors.cors, (req, res, next) => {
-        Categorie.find()
-            .then((categories) => {
+        Cart.find()
+            .then((cart) => {
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
-                res.json(categories);
+                res.json(cart);
             })
             .catch((err) => next(err));
     })
     .post(cors.corsWithOptions, (req, res, next) => {
-        Categorie.create(req.body)
-            .then((categorie) => {
-                console.log("Categorie Created ", categorie);
+        Cart.create(req.body)
+            .then((cart) => {
+                console.log("Cart Created ", cart);
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
-                res.json(categorie);
+                res.json(cart);
             })
             .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, (req, res) => {
         res.statusCode = 403;
-        res.end("PUT operation not supported on /shop");
+        res.end("PUT operation not supported on /cart");
     })
     .delete(cors.corsWithOptions, (req, res) => {
-        res.statusCode = 403;
-        res.end("DELETE operation not supported on /shop");
+        Cart.findByIdAndDelete(req.body._id)
+            .then((response) => {
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "application/json");
+                res.json(response);
+            })
+            .catch((err) => next(err));
     });
 
-module.exports = categorieRouter;
+module.exports = cartRouter;
