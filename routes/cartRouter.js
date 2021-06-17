@@ -26,11 +26,19 @@ cartRouter
             })
             .catch((err) => next(err));
     })
-    .put(cors.corsWithOptions, (req, res) => {
-        res.statusCode = 403;
-        res.end("PUT operation not supported on /cart");
+    .put(cors.corsWithOptions, (req, res, next) => {
+        console.log(`deleting ${req.body}`)
+        Cart.findByIdAndUpdate(req.body._id, {
+            $set: req.body
+        }, { new: true })
+        .then(item => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(item);
+        })
+        .catch(err => next(err));
     })
-    .delete(cors.corsWithOptions, (req, res) => {
+    .delete(cors.corsWithOptions, (req, res, next) => {
         Cart.findByIdAndDelete(req.body._id)
             .then((response) => {
                 res.statusCode = 200;
